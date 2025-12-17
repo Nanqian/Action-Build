@@ -765,7 +765,7 @@ jobs:
         run: |
           cd kernel_workspace/kernel_platform/common
           echo "正在下载 HymoFS 补丁..."
-          wget https://raw.githubusercontent.com/Anatdx/HymoFS/refs/heads/android15_6.6/patch/hymofs.patch || {
+          curl -LSs -o hymofs.patch https://raw.githubusercontent.com/Anatdx/HymoFS/refs/heads/android15_6.6/patch/hymofs.patch || {
             echo "❌ HymoFS 补丁下载失败"
             exit 1
           }
