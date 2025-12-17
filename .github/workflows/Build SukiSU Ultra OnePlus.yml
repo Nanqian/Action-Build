@@ -761,6 +761,15 @@ jobs:
           curl -LSs https://raw.githubusercontent.com/vc-teahouse/Baseband-guard/main/setup.sh | bash
           sed -i '/^config LSM$/,/^help$/{ /^[[:space:]]*default/ { /baseband_guard/! s/lockdown/lockdown,baseband_guard/ } }' ./security/Kconfig
 
+      - name: Apply HymoFS Patch
+        run: |
+          cd kernel_workspace/kernel_platform/common
+          echo "正在下载 HymoFS 补丁..."
+          wget https://raw.githubusercontent.com/Anatdx/HymoFS/refs/heads/android15_6.6/patch/hymofs.patch
+          echo "正在打 HymoFS 补丁..."
+          patch -p1 -F 3 < hymofs.patch
+          echo "HymoFS_patch 完成"
+
       # 配置信息，带*为附加项目，具有一定危险性和不确定性
       - name: Add Configuration Settings
         run: |
@@ -789,6 +798,9 @@ jobs:
           # TMPFS配置*
           echo "CONFIG_TMPFS_XATTR=y" >> "$CONFIG_FILE"
           echo "CONFIG_TMPFS_POSIX_ACL=y" >> "$CONFIG_FILE"
+
+          # HymoFS配置
+          echo "CONFIG_HYMOFS=y" >> "$CONFIG_FILE"
 
           # BBR & ECN配置*
           if [ "${{ github.event.inputs.BBR_ECN }}" = "true" ]; then
